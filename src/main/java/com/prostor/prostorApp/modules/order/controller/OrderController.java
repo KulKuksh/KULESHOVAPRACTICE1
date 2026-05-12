@@ -83,6 +83,12 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
+    public void deleteOrder(@PathVariable Long id) {
+    Order order = orderRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Заказ не найден"));
+    orderRepository.delete(order);
+}
+
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         log.info("DELETE /api/orders/{}", id);
