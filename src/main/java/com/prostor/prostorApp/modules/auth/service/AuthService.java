@@ -130,4 +130,11 @@ public class AuthService {
                 log.warn("Неизвестная роль: {}, запись не создана", roleName);
         }
     }
+    public User registerUser(String email, String password, String fullName) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setFullName(fullName);
+        return userRepository.save(user);
+    }
 }
