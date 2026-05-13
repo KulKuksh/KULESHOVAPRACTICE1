@@ -288,4 +288,29 @@ class ProductControllerTest {
         r.setCreatedAt(LocalDateTime.parse("2024-01-15T12:00:00"));
         return r;
     }
+        @Test
+        @DisplayName("GET /api/products with sort=price uses descending sort by price")
+        void getAll_WithSortPrice_UsesDescendingSort() throws Exception {
+      
+        Pageable expectedPageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "price"));
+        ProductResponse item = sampleResponse(1, "Expensive");
+        Page<ProductResponse> page = new PageImpl<>(List.of(item), expectedPageable, 1);
+
+        when(productService.filterPublic(eq(null), eq(null), eq(null), eq(null), eq(null), eq(expectedPageable)))
+                .thenReturn(page);
+
+
+        mockMvc.perform(get("/api/products")
+                        .param("sort", "price")
+                        .param("page", "0")
+                        .param("size", "20"))
+                .andExpect(status().isOk());
+
+        
+        verify(productService).filterPublic(eq(null), eq(null), eq(null), eq(null), eq(null),
+                argThat(pageable -> {
+                        Sort sort = pageable.getSort();
+                        return sort.isSorted() && sort.getOrderFor("price") != null && sort.getOrderFor("price").isDescending();
+                }));
+        }
 }
