@@ -9,19 +9,21 @@ import lombok.Data;
 
 @Data
 public class ProductRequest {
-    @NotBlank
-    @Size(max = 150)
+    @NotBlank(message = "Название товара обязательно")
+    @Size(max = 150, message = "Название не должно превышать 150 символов")
     private String name;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "Цена обязательна")
+    @Positive(message = "Цена должна быть положительной")
     private double price;
 
-    @NotNull
+    @NotNull(message = "ID продавца обязателен")
     private Integer sellerId;
 
-    @NotNull
+    @NotNull(message = "ID категории обязателен")
     private Integer categoryId;
 
+    @Positive(message = "ID родительского товара (если указан) должен быть положительным")
     private Integer parentId;
+
 }

@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/products")
@@ -28,10 +31,16 @@ public class ProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String sort,
             @PageableDefault(size = 20) Pageable pageable) {
 
         log.debug("GET /api/products - filters: categoryId={}, sellerId={}, minPrice={}, maxPrice={}, name={}",
-                categoryId, sellerId, minPrice, maxPrice, name);
+                categoryId, sellerId, minPrice, maxPrice, name, sort);
+
+        if ("price".equals(sort)) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "price"));
+        }
 
         Page<ProductResponse> products = productService.filter(
                 categoryId, sellerId, minPrice, maxPrice, name, pageable);

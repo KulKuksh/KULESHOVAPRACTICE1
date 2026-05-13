@@ -18,6 +18,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile   # если нет Dockerfile, его нужно создать
+    container_name: prostor-frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    
 volumes:
   postgres_data:

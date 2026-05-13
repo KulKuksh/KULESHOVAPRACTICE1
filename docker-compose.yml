@@ -34,15 +34,6 @@
       - ./logs:/app/logs
     restart: unless-stopped
 
-  frontend:
-    build: ./frontend
-    image: prostor-frontend:1.0.0
-    container_name: prostor-frontend
-    ports:
-      - '3001:80'
-    depends_on:
-      - backend
-
   adminer:
     image: adminer
     container_name: prostor-adminer
